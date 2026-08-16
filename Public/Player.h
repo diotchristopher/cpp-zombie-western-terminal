@@ -19,7 +19,7 @@ public:
     //======================================================================================
     // FUNCTIONS
     //======================================================================================
-    Player(std::string name, int health, int speed, bool gender, int strength, int stamina, int deadEyes);
+    Player(std::string name, int health, int speed, bool gender, int strength, int stamina, int deadEyes, int ammo); // oublie de ammo
 
     int getStamina() const;
     int getDeadEyes() const;

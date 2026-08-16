@@ -65,6 +65,21 @@
     <ClCompile Include="..\Private\ZoneSystem.cpp">
       <Filter>Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\MissionAmbush.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MissionDefense.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MissionDelivery.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MissionEscort.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MissionHunting.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Character.h">
@@ -110,6 +125,21 @@
       <Filter>Public</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ZoneSystem.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MissionAmbush.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MissionDefense.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MissionDelivery.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MissionEscort.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MissionHunting.h">
       <Filter>Public</Filter>
     </ClInclude>
   </ItemGroup>

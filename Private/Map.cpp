@@ -6,14 +6,15 @@
 
 using namespace std;
 
-Map::Map(Region region, Territory territory, Location location, WeatherCondition weatherCondition, bool isAccessible) : region(region), territory(territory), location(location), weatherCondition(weatherCondition), isAccessible(isAccessible) {}
+Map::Map(Region region, WeatherCondition weatherCondition, bool isAccessible, const vector<Location>& locations) : // oublie de const
+    region(region), weatherCondition(weatherCondition), isAccessible(isAccessible), locations(locations) {} // enlever territory
 // correctif finale : suppression champs inutile
 
 Region Map::getRegion() const { return region; }
-Territory Map::getTerritory() const { return territory; }
-Location Map::getLocation() const { return location; }
+// Location Map::getLocation() const { return location; } // remplacement plus utile
 WeatherCondition Map::getWeatherCondition() const { return weatherCondition; }
 bool Map::getIsAccessible() const { return isAccessible; }
+const vector<Location>& Map::getLocations() const { return locations; }
 
 string Map::getWeatherDescription(WeatherCondition weather) {
     switch (weather) {
@@ -35,3 +36,42 @@ string Map::getWeatherDescription(WeatherCondition weather) {
         return "Conditions météorologiques inconnues.";
     }
 } // correctif finale : oublie de }
+
+Map Map::loadDefaultMap() {
+    vector<Location> locations; // oublie de cette ligne de ce vector
+
+    // GREAT PLAINS
+    locations.emplace_back("William's Hope", LocationType::CAMP, 5, InvasionLevel::SAFE, Territory::GREAT_PLAINS, true);
+    locations.emplace_back("Sweetwater", LocationType::TOWN, 15, InvasionLevel::INFESTED, Territory::GREAT_PLAINS, false);
+    locations.emplace_back("Fletcher's Ranch", LocationType::CAMP, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
+
+    // TALL TREES
+    locations.emplace_back("Deadwood Post", LocationType::CAMP, 8, InvasionLevel::THREATENED, Territory::TALL_TREES, false);
+    locations.emplace_back("Elk Basin", LocationType::LANDMARK, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false); // oublie de ,
+    locations.emplace_back("Bear Falls", LocationType::LANDMARK, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false); // I enlever
+
+    return Map(Region::WEST_ELIZABETH, WeatherCondition::CLEAR, true, locations);
+}
+
+const Location* Map::findLocationByName(const std::string& name) const { // oublie de Map:: et la reference &
+    for (auto& location : locations) {
+        if (location.getName() == name) return &location;
+    }
+    return nullptr;
+}
+
+vector<const Location*> Map::getLocationByTerritorry(Territory territory) const {
+    std::vector<const Location*> result;
+    for (const auto& loc : locations) {
+        if (loc.getTerritory() == territory)
+            result.push_back(&loc);
+    }
+    return result;
+}
+
+Location* Map::getLocationAt(size_t index) {
+    if (index >= locations.size()) return nullptr;
+    return &locations[index];
+}
+
+size_t Map::size() const { return locations.size(); }

@@ -136,6 +136,11 @@
     <ClCompile Include="..\Private\LootSystem.cpp" />
     <ClCompile Include="..\Private\Map.cpp" />
     <ClCompile Include="..\Private\Mission.cpp" />
+    <ClCompile Include="..\Private\MissionAmbush.cpp" />
+    <ClCompile Include="..\Private\MissionDefense.cpp" />
+    <ClCompile Include="..\Private\MissionDelivery.cpp" />
+    <ClCompile Include="..\Private\MissionEscort.cpp" />
+    <ClCompile Include="..\Private\MissionHunting.cpp" />
     <ClCompile Include="..\Private\MissionRescue.cpp" />
     <ClCompile Include="..\Private\Npc.cpp" />
     <ClCompile Include="..\Private\NpcZombie.cpp" />
@@ -154,6 +159,11 @@
     <ClInclude Include="..\Public\LootSystem.h" />
     <ClInclude Include="..\Public\Map.h" />
     <ClInclude Include="..\Public\Mission.h" />
+    <ClInclude Include="..\Public\MissionAmbush.h" />
+    <ClInclude Include="..\Public\MissionDefense.h" />
+    <ClInclude Include="..\Public\MissionDelivery.h" />
+    <ClInclude Include="..\Public\MissionEscort.h" />
+    <ClInclude Include="..\Public\MissionHunting.h" />
     <ClInclude Include="..\Public\MissionRescue.h" />
     <ClInclude Include="..\Public\Npc.h" />
     <ClInclude Include="..\Public\NpcZombie.h" />

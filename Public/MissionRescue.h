@@ -22,7 +22,7 @@ private:
     //======================================================================================
     std::vector<Npc*> localSurvivors; // oublie de std
     std::vector<NpcZombie*> localZombies; // oublie de std
-
+    
     int waveCount;
     int currentWave;
     int waveRemaining;

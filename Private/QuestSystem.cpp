@@ -43,6 +43,10 @@ void QuestSystem::generateMission(Player* player, Location* location) { // corre
 			break;
 		}
 
+		// 60% pour une mission de sauvetage classique (plusieurs survivants, vagues de zombies).
+		// 30 % pour une embuscade de bandits(un survivant, pas de zombies).
+		// 10 % pour un sauvetage simple(un survivant, une vague de zombies).
+
 		if (newMission) break; // oublie
 	}
 	if (newMission) { // oublie de verifier

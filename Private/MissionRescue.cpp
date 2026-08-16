@@ -23,6 +23,21 @@ void MissionRescue::start() { // mots cles inutile ici override
     currentWave = 1;
     // enlever inutile ici survivorsToRescue = 2;
     // enlever inutile ici zombiesPerWave = 8;
+    
+    int survivorsToAdd = 3;
+    for (int i = 0; i < survivorsToAdd; i++) {
+        Npc* NpcToRescue;
+        NpcToRescue = new Npc(
+            "Survivant_" + to_string(i + 1), // oublie de to string
+            100,   // HP
+            3,     // vitesse
+            true,  // est vivant
+            1,     // force
+            Role::CITIZEN,
+            true
+        );
+        targetLocation->addSurvivor(NpcToRescue);
+    }
     localSurvivors = targetLocation->getSurvivors(); // erreur : C++ no operator matches these operands parce que fonction getSurvivor pas vector
     // zombiesRemaining = zombiesPerWave;
 

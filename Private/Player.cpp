@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Player::Player(string name, int health, int speed, bool gender, int strength, int stamina, int deadEyes) : Character(name, health, speed, gender, strength), stamina(stamina), deadEyes(deadEyes) {}
-
+Player::Player(string name, int health, int speed, bool gender, int strength, int stamina, int deadEyes, int ammo) : Character(name, health, speed, gender, strength), stamina(stamina), deadEyes(deadEyes), ammo(ammo) {}
+// oublie de ammo
 int Player::getStamina() const { return stamina; } // oublie de Player::
 int Player::getDeadEyes() const { return deadEyes; }
 
