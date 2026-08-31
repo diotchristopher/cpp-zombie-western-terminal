@@ -33,8 +33,8 @@
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Animals.cpp">
-        <Filter>Private</Filter>
-      </ClCompile>
+      <Filter>Private</Filter>
+    </ClCompile>
     <ClCompile Include="..\Private\AnimalsZombie.cpp">
       <Filter>Private</Filter>
     </ClCompile>
@@ -71,13 +71,10 @@
     <ClCompile Include="..\Private\MissionDefense.cpp">
       <Filter>Private</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MissionDelivery.cpp">
+    <ClCompile Include="..\Private\IFighter.cpp">
       <Filter>Private</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MissionEscort.cpp">
-      <Filter>Private</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\MissionHunting.cpp">
+    <ClCompile Include="..\Private\MissionCemetery.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,8 +92,8 @@
       <Filter>Public</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Animals.h">
-        <Filter>Public</Filter>
-      </ClInclude>
+      <Filter>Public</Filter>
+    </ClInclude>
     <ClInclude Include="..\Public\AnimalsZombie.h">
       <Filter>Public</Filter>
     </ClInclude>
@@ -133,13 +130,10 @@
     <ClInclude Include="..\Public\MissionDefense.h">
       <Filter>Public</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MissionDelivery.h">
+    <ClInclude Include="..\Public\IFighter.h">
       <Filter>Public</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MissionEscort.h">
-      <Filter>Public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MissionHunting.h">
+    <ClInclude Include="..\Public\MissionCemetery.h">
       <Filter>Public</Filter>
     </ClInclude>
   </ItemGroup>

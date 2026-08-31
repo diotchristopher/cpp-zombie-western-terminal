@@ -14,5 +14,7 @@ public:
 
 	ZombieType getZombieType() const;
 
+	bool isLootable() const override;
+
 	std::string getZombieTypeAsString() const;
 };

@@ -10,6 +10,8 @@ NpcZombie::NpcZombie(string name, int health, int speed, bool gender, int streng
 
 ZombieType NpcZombie::getZombieType() const { return zombieType; }
 
+bool NpcZombie::isLootable() const { return true; }
+
 string NpcZombie::getZombieTypeAsString() const {
     switch (zombieType) {
     case ZombieType::STANDARD: return "Standard";

@@ -22,13 +22,14 @@ vector<Mission*> QuestSystem::getActiveMissions() const {  // fonction inutile
 
 void QuestSystem::loadMissons() {
 	availableMission = {
-		// targetLocation, missionType, title, waveCount, currentWave, waveRemaining, zombiesPerWave
-		{LocationType::ROAD, MissionType::RESCUE, "Sauvetage 1", 3, 1, 3, 8}, // ajoute de trop de {} pour chaque variable
-		{LocationType::ROAD, MissionType::RESCUE, "Sauvetage 2", 3, 1, 3, 8},
+		// targetLocation, missionType, title
+		{LocationType::ROAD, MissionType::RESCUE, "Sauvetage 1"},
+		{LocationType::ROAD, MissionType::RESCUE, "Sauvetage 2"},
 	};
 }
 
-void QuestSystem::generateMission(Player* player, Location* location) { // correctif finale: oublie de Player* player (megat dur a trouver)
+/*
+void QuestSystem::generateMission(Location* location) { // correctif finale: oublie de Player* player (megat dur a trouver)
 	Mission* newMission = nullptr;
 
 	for (const auto& mission : availableMission)
@@ -36,34 +37,76 @@ void QuestSystem::generateMission(Player* player, Location* location) { // corre
 		switch (mission.missionType)
 		{
 		case MissionType::RESCUE:
-			newMission = new MissionRescue(player, location, mission.missionType, mission.title, false, false, mission.waveCount, mission.currentWave, mission.waveRemaining, mission.zombiesPerWave, false);
-			// Player* player, Location* targetLocation, MissionType missionType, std::string title, bool isActive, bool isCompleted, int waveCount, int currentWave, int waveRemaining, int zombiesPerWave, bool isRescued
+			newMission = new MissionRescue(player, location, mission.title); // enlever mission.missionType,
+			// plus besoin de mission.waveCount, mission.currentWave, mission.waveRemaining, mission.zombiesPerWave,
 			break;
 		default:
 			break;
 		}
 
-		// 60% pour une mission de sauvetage classique (plusieurs survivants, vagues de zombies).
-		// 30 % pour une embuscade de bandits(un survivant, pas de zombies).
-		// 10 % pour un sauvetage simple(un survivant, une vague de zombies).
+		if (newMission) break;
+	}
+	if (newMission) {
+		activeMissions.push_back(newMission);
+	}
+}
+*/
 
-		if (newMission) break; // oublie
+Mission* QuestSystem::tryGenerateMission(Location* to) {
+	if (!to) {
+		return nullptr;
 	}
-	if (newMission) { // oublie de verifier
-		activeMission.push_back(newMission);
+
+
+	// generer mission aleatoire en dehors de la ville et des postes avancer
+	if (to->getLocationType() == LocationType::TOWN || to->getLocationType() == LocationType::OUTPOST)
+		return nullptr;
+
+
+	int chance = rand() % 100;
+	if (chance < 30) {
+		Mission* rescue = new MissionRescue(player, to, "Mission de sauvetage"); // ajout en trop MissionType::RESCUE, difficile a trouver
+		return rescue;
 	}
+	return nullptr;
+}
+
+Mission* QuestSystem::autoTriggerMission(Location* location) {
+	if (!location) {
+		return nullptr;
+	}
+
+	if (location->getLocationType() == LocationType::CEMETERY) {
+		Mission* cemetery = new MissionCemetery(player, location, "Mission de cimetière"); // ajout en trop MissionType::CEMETERY, difficile a trouver
+		cemetery->start();
+		activeMissions.push_back(cemetery);
+		return cemetery;
+	}
+
+
+	if (location->getLocationType() == LocationType::TOWN && 
+		(location->getInvasionLevel() == InvasionLevel::INFESTED || location->getInvasionLevel() == InvasionLevel::THREATENED)) {
+		Mission* defense = new MissionDefense(this->player, location, "Mission de défense"); // ajout en trop MissionType::DEFENSE, difficile a trouver
+		defense->start();
+		activeMissions.push_back(defense);
+		return defense;
+	}
+
+	return nullptr;
 }
 
 void QuestSystem::startMission(Mission* mission) {
+	if (!mission) return; // oublie
 	if (!mission->getIsActive() && !mission->getIsCompleted()) {
-		mission->start(); // erreur utilisation de return alors que fonction void
+		mission->start();
 		cout << "Mission démarrée : " << mission->getTitle() << endl;
+		activeMissions.push_back(mission); // 
 	}
 }
 
 void QuestSystem::updateMissions() {
-	for (const auto& mission : activeMission)
+	for (const auto& mission : activeMissions)
 	if (mission->getIsActive() && !mission->getIsCompleted()) {
-		mission->update(); // erreur utilisation de return alors que fonction void
+		mission->update();
 	}
 }

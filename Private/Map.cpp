@@ -41,14 +41,18 @@ Map Map::loadDefaultMap() {
     vector<Location> locations; // oublie de cette ligne de ce vector
 
     // GREAT PLAINS
-    locations.emplace_back("William's Hope", LocationType::CAMP, 5, InvasionLevel::SAFE, Territory::GREAT_PLAINS, true);
+    locations.emplace_back("William's Hope", LocationType::FARM, 5, InvasionLevel::SAFE, Territory::GREAT_PLAINS, true);
     locations.emplace_back("Sweetwater", LocationType::TOWN, 15, InvasionLevel::INFESTED, Territory::GREAT_PLAINS, false);
-    locations.emplace_back("Fletcher's Ranch", LocationType::CAMP, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
+    locations.emplace_back("Sweetwater Cimetery", LocationType::CEMETERY, 15, InvasionLevel::INFESTED, Territory::GREAT_PLAINS, false);
+    locations.emplace_back("Fletcher's Ranch", LocationType::FARM, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
+    locations.emplace_back("Great Flats", LocationType::PLAINS, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
+    locations.emplace_back("Great Flats Road", LocationType::ROAD, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
 
     // TALL TREES
-    locations.emplace_back("Deadwood Post", LocationType::CAMP, 8, InvasionLevel::THREATENED, Territory::TALL_TREES, false);
-    locations.emplace_back("Elk Basin", LocationType::LANDMARK, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false); // oublie de ,
-    locations.emplace_back("Bear Falls", LocationType::LANDMARK, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false); // I enlever
+    locations.emplace_back("Deadwood Post", LocationType::OUTPOST, 8, InvasionLevel::THREATENED, Territory::TALL_TREES, false);
+    locations.emplace_back("Elk Basin", LocationType::CAMP, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false);
+    locations.emplace_back("Lobo Road", LocationType::ROAD, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false);
+    locations.emplace_back("Bear Falls", LocationType::FOREST, 0, InvasionLevel::SAFE, Territory::TALL_TREES, false);
 
     return Map(Region::WEST_ELIZABETH, WeatherCondition::CLEAR, true, locations);
 }

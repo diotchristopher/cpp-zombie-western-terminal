@@ -19,7 +19,7 @@ void LootSystem::HandleLoot(Player& player) {
     // parcourrir les loot et envoyer au joueur
     for (const LootItem& item : loot) {
         if (item.name == "Munitions") {
-            player.AddAmmo(item.quantity);
+            player.addAmmo(item.quantity);
         }
         else if (item.name == "Stamina") {
             player.heal(item.quantity);
@@ -27,8 +27,8 @@ void LootSystem::HandleLoot(Player& player) {
         else if (item.name == "Dead Eyes") {
             // Recharge les Dead Eyes
             int current = player.getDeadEyes();
-            player = Player(player.getName(), player.getHealth(), player.getSpeed(), player.getGender(), player.getStrength(), player.getStamina(), current + item.quantity);
-        }
+            player = Player(player.getName(), player.getHealth(), player.getSpeed(), player.getGender(), player.getStrength(), player.getStamina(), current + item.quantity, player.getAmmo()); //  ajoute de player.getAmmo() manquant
+        } // std::string name, int health, int speed, bool gender, int strength, int stamina, int deadEyes, int ammo
     }
 
     DisplayLoot(loot);

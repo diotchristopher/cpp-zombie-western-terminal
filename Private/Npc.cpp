@@ -14,6 +14,8 @@ Role Npc::getRole() const { return role; }
 
 bool Npc::getIsMilitia() const { return isMilitia; }
 
+bool Npc::isLootable() const { return true; }
+
 string Npc::getRoleAsString() {
     switch (role) {
     case Role::SHERIFF: return "Shérif";

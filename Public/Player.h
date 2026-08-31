@@ -14,6 +14,8 @@ private:
     int stamina;
     int deadEyes;
     int ammo;
+    int money;
+    int reputation;
 
 public:
     //======================================================================================
@@ -25,7 +27,15 @@ public:
     int getDeadEyes() const;
 
     int getAmmo() const;
-    void AddAmmo(int amount);
+    void addAmmo(int amount); // remplacement du A majuscule
+
+    int getMoney() const;
+    void addMoney(int amount);
+
+    int getReputation() const;
+    void addReputation(int amount);
+
+    bool isPlayerControlled() const override;
 
     void heal(int amount);
     void useStamina();

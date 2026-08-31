@@ -1,32 +1,44 @@
-#include "../Public/MissionDelivery.h"
-#include "../Public/CombatSystem.h"
-
+#include "../public/MissionDelivery.h"
 #include <iostream>
 
-MissionDelivery::MissionDelivery(Player* p, Location* start, Location* end)
-    : Mission(p, start), destination(end) {
+using namespace std;
+
+MissionDelivery::MissionDelivery(Player* player, Location* targetLocation, const std::string& item, int amount)
+    : Mission(player, targetLocation, MissionType::DELIVERY, "Mission de Livraison", false, false),
+    requestedItem(item), requestedAmount(amount), deliverySuccess(false) {
 }
 
+string MissionDelivery::getRequestedItem() const { return requestedItem; }
+int MissionDelivery::getRequestedAmount() const { return requestedAmount; }
+bool MissionDelivery::getDeliverySuccess() const { return deliverySuccess; }
+
 void MissionDelivery::start() {
-    std::cout << "[MissionDelivery] Livrez le colis de "
-        << targetLocation->getName() << " à "
-        << destination->getName() << ".\n";
     isActive = true;
+    isCompleted = false;
+    deliverySuccess = false;
+
+    cout << ">> [" << getTitle() << "] Un survivant a " << getTargetLocation()->getName()
+        << " vous demande : " << requestedAmount << "x " << requestedItem << "." << endl;
 }
 
 void MissionDelivery::update() {
-    if (!isActive) return;
+    if (!isActive || isCompleted) return;
 
-    int zombieCount = rand() % 4;
-    if (zombieCount > 0) {
-        std::cout << "Des zombies attaquent en chemin !\n";
-        CombatSystem::startCombat(*player, zombieCount);
+    if (getPlayer()->hasItem(requestedItem, requestedAmount)) {
+        getPlayer()->removeItem(requestedItem, requestedAmount);
+        cout << ">> Livraison reussie ! Le survivant vous remercie." << endl;
+        deliverySuccess = true;
+        isCompleted = true;
+    }
+    else {
+        cout << ">> Echec : vous n'avez pas " << requestedAmount << "x " << requestedItem << "." << endl;
+        deliverySuccess = false;
+        isCompleted = true;
     }
 
-    std::cout << "Colis livré à " << destination->getName() << " !\n";
     isActive = false;
 }
 
-bool MissionDelivery::isCompleted() const {
-    return !isActive;
+bool MissionDelivery::checkCompletion() {
+    return isCompleted;
 }

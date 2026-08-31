@@ -2,8 +2,12 @@
 
 // game
 #include "../public/Player.h" // correctif final : virgule interdit ;
+#include "../public/Location.h"
 #include "../public/Mission.h" // correctif final : virgule interdit ;
 #include "../public/MissionRescue.h"
+#include "../public/MissionCemetery.h"
+#include "../public/MissionDefense.h"
+#include "../public/MissionAmbush.h"
 
 // cpp
 #include <string>
@@ -11,13 +15,10 @@
 #include <algorithm>
 
 struct MissionList {
-	LocationType locationType; // mauvais appelle Location* targetLocation; 
+	LocationType locationType;
 	MissionType missionType;
 	std::string title;
-	int waveCount; 
-	int currentWave;
-	int waveRemaining; 
-	int zombiesPerWave; 
+	// plus besoin de int waveCount; int currentWave; int waveRemaining; int zombiesPerWave; 
 };
 
 class QuestSystem {
@@ -26,8 +27,8 @@ private:
 	// PROPERTIES & VARIABLES
 	//======================================================================================
 	Player* player;
-	std::vector<MissionList> availableMission; // oublie de std et pointer * en trop, enlever
-	std::vector<Mission*> activeMission; // oublie de std
+	std::vector<MissionList> availableMission;
+	std::vector<Mission*> activeMissions;
 
 public:
 	//======================================================================================
@@ -40,7 +41,10 @@ public:
 	// vector<Mission*> getActiveMissions() const; // fonction inutile
 
 	void loadMissons();
-	void generateMission(Player* player, Location* location);
+	//void generateMission(Player* player, Location* location);
 	void startMission(Mission* mission);
 	void updateMissions();
+
+	Mission* tryGenerateMission(Location* to);
+	Mission* autoTriggerMission(Location* loc);
 };

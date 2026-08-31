@@ -8,7 +8,7 @@
 #include <string>
 
 enum class MissionType {
-    ESCORT, DELIVERY, AMBUSH, DEFENSE, RESCUE };
+    DELIVERY, CEMETERY, DEFENSE, RESCUE, AMBUSH }; // ESCORT, 
 
 class Mission {
 protected: // remplacer private par protected et pas utiliser des setter
@@ -43,5 +43,7 @@ public:
 
     virtual bool checkCompletion() = 0;
 
-    virtual ~Mission() {}
+    virtual ~Mission() {}; // oublie de ;, ne donnais aucun erreur
+
+    virtual void giveReward(Player& player) = 0;
 };

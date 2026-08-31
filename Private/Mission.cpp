@@ -1,5 +1,6 @@
 // game
 #include "../Public/Mission.h" // correctif final : virgule interdit ;
+#include "../Public/LootSystem.h"
 
 // cpp
 #include <iostream>
@@ -18,7 +19,6 @@ MissionType Mission::getMissionType() const { return missionType; }
 std::string Mission::getTitle() const { return title; } // oublie de Mission::
 bool Mission::getIsActive() const { return isActive; }
 bool Mission::getIsCompleted() const { return isCompleted; }
-
 
 
 

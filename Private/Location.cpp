@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Location::Location(string& name, LocationType locationType, int numberOfSurvivors, InvasionLevel invasionLevel, Territory territory, bool isSafeZone) : name(name), locationType(locationType), numberOfSurvivors(numberOfSurvivors), invasionLevel(invasionLevel), territory(territory), isSafeZone(isSafeZone) {}
+Location::Location(const string& name, LocationType locationType, int numberOfSurvivors, InvasionLevel invasionLevel, Territory territory, bool isSafeZone) : name(name), locationType(locationType), numberOfSurvivors(numberOfSurvivors), invasionLevel(invasionLevel), territory(territory), isSafeZone(isSafeZone) {}
 // correctif final : mauvaise implementation de Location au lieu de LocationType / ; apres numberOfSurvivors(numberOfSurvivors)
 
 // GET
@@ -52,5 +52,6 @@ string Location::toString() const {
     case InvasionLevel::INFESTED: ss << "INFESTED"; break;
     }
     if (isSafeZone) ss << " - SAFE ZONE";
+    ss << ")";
     return ss.str();
 }

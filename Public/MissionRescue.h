@@ -15,39 +15,53 @@
 #include <ctime>
 #include <string>
 
-class MissionRescue : public Mission { // inverser MissionRescue et Mission
+enum class MissionRescueScenario {SOLO, CAMP, HOSTILE};
+
+class MissionRescue : public Mission {
 private:
     //======================================================================================
     // PROPERTIES & VARIABLES
     //======================================================================================
-    std::vector<Npc*> localSurvivors; // oublie de std
-    std::vector<NpcZombie*> localZombies; // oublie de std
+    std::vector<Npc*> localSurvivors;
+    std::vector<NpcZombie*> localZombies;
+    std::vector<Npc*> localBandits;
     
     int waveCount;
     int currentWave;
-    int waveRemaining;
+    // int waveRemaining; // enlever  int waveRemaining
     int zombiesPerWave;
-    bool isRescued; // int au lieu de bool
+    bool isRescued;
 
-public: 
-    MissionRescue(Player* player, Location* targetLocation, MissionType missionType, std::string title, bool isActive, bool isCompleted, int waveCount, int currentWave, int waveRemaining, int zombiesPerWave, bool isRescued); // int isRescued au lieu de bool isRescued
-    
+    MissionRescueScenario missionScenario;
+
     //======================================================================================
     // FUNCTIONS
     //======================================================================================
+    void spawnSoloSurvivor();
+    void spawnCampSurvivors(int number);
+    void spawnHostileBandits(int number);
+    void spawnZombiesPerWave(int currentWave);
 
+    void cleanupDead();
+
+public: 
+    MissionRescue(Player* player, Location* targetLocation, const std::string& title = "Defendre");
+    // enlever MissionType missionType, ..., bool isActive, bool isCompleted, int waveCount, int currentWave, int zombiesPerWave, bool isRescued
+    //======================================================================================
+    // FUNCTIONS
+    //======================================================================================
     int getWaveCount() const;
     int getCurrentWave() const;
-    int getWaveRemaining() const;
+    // int getWaveRemaining() const;
     int getZombiesPerWave() const;
-    bool getIsRescued() const; // int au lieu de bool 
-    
-    void spawnZombies();
+    bool getIsRescued() const;
+
+    // void spawnZombies(int number); // fonction deplacer en private et renomme
     
     void start() override;
-
     void update() override;
-
     bool checkCompletion() override;
+
+    void giveReward(Player& player) override;
 };
 

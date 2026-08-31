@@ -11,7 +11,7 @@ using namespace std;
 
 Game::Game(const std::string& playerName) 
     : isRunning(true),  // initialise les valeur des la construction
-    player(playerName, 100, 5, true, 5, 100, 0, 10), 
+    player(playerName, 100, 5, true, 20, 100, 0, 10), 
     worldMap(Map::loadDefaultMap()), // ajoute du nouveau systeme
     zoneSystem(&worldMap),
     questSystem(nullptr),
@@ -22,7 +22,9 @@ Game::Game(const std::string& playerName)
         currentLocation = worldMap.getLocationAt(0);
     }
 
-    cout << "Bienvenue dans WestWorld " << player.getName() << "!\n";
+    questSystem = new QuestSystem(&player);
+
+    cout << "Bienvenue dans Zombie Western " << player.getName() << "!\n";
     srand(static_cast<unsigned>(time(nullptr))); // Pour les zombies aléatoires et tous ce qui est aléatoire
 }
 
@@ -32,8 +34,11 @@ Game::~Game() {
 
 void Game::run() { // oublie Game::
     // srand deplacer dans le constructeur, pas besoin ici
-	while (true) {
-        displayMenu();
+    cout << endl;
+    cout << "Tu te trouve actuellement à : " << currentLocation->getName() << endl;
+
+    displayMenu();
+    while (isRunning) { // remplce true 
 
         cout << "Choix : ";
         int choice;
@@ -51,34 +56,7 @@ void Game::run() { // oublie Game::
         }
 	}
 
-    /* 
-    while (isRunning) {
-        printMainMenu();
-        int choice;
-        if (!(std::cin >> choice)) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            std::cout << "Entrée invalide.\n";
-            continue;
-        }
-        switch (choice) {
-            case 1: handleExplore(); break;
-            case 2: handleResearch(); break;
-            case 3: handleMissions(); break;
-            case 4:
-                std::cout << "Statut: " << player.getName() << " - PV: " << player.getHealth()
-                          << " - Stamina: " << player.getStamina() << " - DeadEyes: " << player.getDeadEyes()
-                          << " - Ammo: " << player.getAmmo() << "\n";
-                break;
-            case 0:
-                isRunning = false;
-                break;
-            default:
-                std::cout << "Choix inconnu.\n";
-        }
-    }
-    std::cout << "Au revoir.\n";
-    */
+    questSystem->updateMissions();
 }
 
 void Game::displayMenu() {
@@ -112,7 +90,9 @@ void Game::handleExplorer() {
         cout << "Index hors plage.\n";
         return;
     }
-    moveToLocation(dest);
+    moveToLocation(&player, dest);
+
+    questSystem->tryGenerateMission(dest);
 }
 
 void Game::handleResearch() {
@@ -128,7 +108,7 @@ void Game::handleMission() {
     }
 }
 
-void Game::moveToLocation(Location* location) {
+void Game::moveToLocation(Player* player, Location* location) { // ajout de Player* player, 
     if (!location) {
         cout << "Destination invalide.\n";
         return;
@@ -136,21 +116,61 @@ void Game::moveToLocation(Location* location) {
 
     cout << "Vous partez de " << (currentLocation ? currentLocation->getName() : "nulle part") << " vers " << location->getName() << "...\n";
 
+    currentLocation = location;
+
     // gestion rencontre sur la route
-    vector<Character*> enemies = zoneSystem.spawnZombiesForRoute(*currentLocation, *location);
-    if (!enemies.empty()) {
-        combatSystem.StartCombat(player, enemies);
-        // après combat, nettoyer ennemis alloués
-        for (auto e : enemies) delete e;
-        enemies.clear();
-        // si joueur mort, arrêter
-        if (player.getHealth() <= 0) {
-            cout << "Le joueur est mort. Fin du jeu.\n";
-            isRunning = false;
-            return;
+
+    // ajout de l'equipe A dans IFighter : Joueur
+    vector<IFighter*> teamA;
+
+    if (player && player->getHealth() > 0) {
+        teamA.push_back(player);
+    }
+
+    // ajout de l'equipe B dans IFighter : Npc Zombie ou Animals Zombie
+    vector<IFighter*> teamB;
+
+    int randomNumber = rand() % 100;
+
+    if (location->getLocationType() == LocationType::FOREST ||
+        location->getLocationType() == LocationType::PLAINS ||
+        location->getLocationType() == LocationType::FARM)
+    {
+        if (randomNumber < 50) {
+            auto spawnedAnimalsZombie = zoneSystem.spawnAnimalZombies(*location); // auto difficile a trouver
+            for (auto* animalsZombie : spawnedAnimalsZombie) {
+                if (animalsZombie && animalsZombie->getHealth() > 0) {
+                    teamB.push_back(animalsZombie);
+                }
+            }
+        }
+    } else if (location->getLocationType() == LocationType::TOWN ||
+        location->getLocationType() == LocationType::OUTPOST)
+    {
+        if (randomNumber < 50) {
+            auto spawnedNpcZombie = zoneSystem.spawnNpcZombies(*location);
+            for (auto* npcZombie : spawnedNpcZombie) {
+                if (npcZombie && npcZombie->getHealth() > 0) {
+                    teamB.push_back(npcZombie);
+                }
+            }
         }
     }
 
-    currentLocation = location;
+    if (!teamA.empty() && !teamB.empty()) {
+        CombatSystem combat;
+        combat.StartCombat(teamA, teamB);
+
+        zoneSystem.cleanupDead();
+    }
+
+    if (player->getHealth() <= 0) {
+        cout << "Le joueur est mort. Fin du jeu.\n";
+        isRunning = false;
+        return;
+    }
+
     cout << "Vous arrivez à " << currentLocation->getName() << ".\n";
+
+    questSystem->autoTriggerMission(currentLocation);
 }

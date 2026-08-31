@@ -12,7 +12,15 @@ int Player::getStamina() const { return stamina; } // oublie de Player::
 int Player::getDeadEyes() const { return deadEyes; }
 
 int Player::getAmmo() const { return ammo; }
-void Player::AddAmmo(int amount) { ammo += amount; }
+void Player::addAmmo(int amount) { ammo += amount; }
+
+int Player::getMoney() const { return money; }
+void Player::addMoney(int amount) { money += amount; }
+
+int Player::getReputation() const { return reputation; }
+void Player::addReputation(int amount) { reputation += amount; }
+
+bool Player::isPlayerControlled() const { return true; }
 
 
 void Player::heal(int amount) { // oublie de Player:: et oublie de amount
@@ -24,6 +32,7 @@ void Player::useStamina() {
 		stamina -= 5;
 	}
 }
+
 void Player::useDeadEyes() {
 	if (deadEyes > 5) {
 		deadEyes -= 5;
@@ -32,5 +41,15 @@ void Player::useDeadEyes() {
 
 void Player::rechargeDeadEye(int amount) {
 	deadEyes += amount;
-	if (amount > 100) deadEyes = 100;
+	if (amount > 100) {
+		deadEyes = 100;
+	}
 }
+
+/*
+void Character::performAttack(Character* target) {
+	if (target != nullptr) { // oublie nullptr
+		target->takeDamage(getStrength());
+	}
+}
+*/

@@ -19,5 +19,7 @@ public:
 	Role getRole() const;
 	bool getIsMilitia() const;
 
+	bool isLootable() const override;
+
 	std::string getRoleAsString();
 };

@@ -38,7 +38,7 @@ private:
     void handleExplorer();
     void handleResearch();
     void handleMission();
-    void moveToLocation(Location* location);
+    void moveToLocation(Player* player, Location* location); // ajout de Player* player, 
 
 public:
     //======================================================================================
