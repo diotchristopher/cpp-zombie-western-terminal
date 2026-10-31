@@ -4,13 +4,21 @@
 // cpp
 #include <iostream>
 
+#ifdef _WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
 // game
 #include "../public/Player.h"
 #include "../public/Game.h"
 
 int main()
 {
-    Game game("Elias"); // óublie du constructeur
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+    Game game("Elias"); // Ã³ublie du constructeur
     game.run();
     return 0;
 }

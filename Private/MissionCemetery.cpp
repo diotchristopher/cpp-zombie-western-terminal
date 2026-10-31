@@ -19,22 +19,22 @@ bool MissionCemetery::getIsPurified() const { return isPurified; }
 
 void MissionCemetery::start() {
     isActive = true;
-    cout << ">> [" << getTitle() << "] Tu entre dans le " << getTargetLocation()->getName() << endl;
-    cout << "Objectif : Bruler " << totalCoffins << " cercueils et survivre aux vagues de zombies." << endl;
+    cout << ">> [" << getTitle() << "] Tu entres dans le " << getTargetLocation()->getName() << endl;
+    cout << "Objectif : BrÃ»ler " << totalCoffins << " cercueils et survivre aux vagues de zombies." << endl;
 
     burnedCoffins = burnedCoffins + 1;
     spawnZombiesPerCoffins(burnedCoffins); // oublie de faire * 1 commencais a 0, logique differente
 }
 
 void MissionCemetery::update() {
-    if (!isActive || isCompleted) { 
+    if (!isActive || isCompleted || !player) { // erreur ajoute de || !player
         return; 
     }
     
     // ajout de l'equipe A dans IFighter : Joueur
     vector<IFighter*> teamA;
 
-    if (player && player->getHealth() > 0) {
+    if (player->getHealth() > 0) { // suppr player && apres ajoute || !player dans update
         teamA.push_back(player);
     }
 
@@ -50,7 +50,7 @@ void MissionCemetery::update() {
     // maj quand joueur mort
     if (teamA.empty())
     {
-        cout << "Tu est mort. Mission échouée.\n";
+        cout << "Tu es mort. Mission Ã©chouÃ©e.\n";
         isActive = false;
         isCompleted = true;
         isPurified = false;
@@ -61,6 +61,8 @@ void MissionCemetery::update() {
     if (teamB.empty()) {
         if (burnedCoffins < totalCoffins) {
             burnedCoffins++;
+            player->heal(20); // ajout = augemente le taux de survie
+            cout << "+20 points de santÃ©" << endl;
             spawnZombiesPerCoffins(burnedCoffins);
         }
     }
@@ -82,7 +84,8 @@ void MissionCemetery::update() {
     cleanupDead();
 
     if (checkCompletion()) {
-        cout << "Le cimetiere a été purifie !" << endl;
+        cout << "Le cimetiÃ¨re a Ã©tÃ© purifiÃ© !" << endl;
+        giveReward(*player); // ajouter pour donner recompence
         if (getTargetLocation()) {
             getTargetLocation()->setInvasionLevel(InvasionLevel::SAFE);
         }
@@ -93,13 +96,13 @@ void MissionCemetery::update() {
 }
 
 bool MissionCemetery::checkCompletion() {
-    return burnedCoffins == totalCoffins && finalWaveSpawned;
+    return burnedCoffins == totalCoffins && finalWaveSpawned && localZombies.empty() && player->getHealth() > 0;
 }
 
 void MissionCemetery::giveReward(Player& player) {
     player.addAmmo(6);
     player.addReputation(200);
-    cout << "Tu as gagné " << player.getAmmo() << " munitions pour ton revolver" << endl;
+    cout << "Tu as gagnÃ© 6 munitions pour ton revolver" << endl; // suppr " << player.getAmmo() << " afficher le total au lieu du nombre
     cout <<  "+ Gain d'Honneur" << endl;
 }
 
@@ -158,7 +161,7 @@ void MissionCemetery::spawnZombiesPerCoffins(int burnedCoffins) {
                 type = ZombieType::SPITTER;
             }
             else { // 10%
-                name = "Un zombie brutale";
+                name = "Un zombie brutal";
                 health = 30;
                 speed = 1;
                 gender = true;
@@ -215,7 +218,7 @@ void MissionCemetery::spawnLastZombies(int burnedCoffins) {
             type = ZombieType::SPITTER;
         }
         else { // 10%
-            name = "Un zombie brutale";
+            name = "Un zombie brutal";
             health = 30;
             speed = 1;
             gender = true;

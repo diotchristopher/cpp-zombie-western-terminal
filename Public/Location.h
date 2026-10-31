@@ -8,7 +8,7 @@
 #include <vector>
 #include <algorithm>
 
-class Npc; // accélère la compilation et réduit les dépendances croisées.
+class Npc; // accÃ©lÃ¨re la compilation et rÃ©duit les dÃ©pendances croisÃ©es.
 
 enum class LocationType { TOWN, CEMETERY, OUTPOST, ROAD, FARM, FOREST, CAMP, PLAINS }; // TWON au lieu de TOWN, ajout de FARM et FORESET, OTHER, enlever
 
@@ -47,7 +47,7 @@ public:
     InvasionLevel getInvasionLevel() const;
     Territory getTerritory() const;
     bool getIsSafeZone() const;
-    // const char[] transformé en std::string
+    // const char[] transformÃ© en std::string
 
     void setInvasionLevel(InvasionLevel level);
     /* // inutile
@@ -57,7 +57,7 @@ public:
 
     std::vector<Npc*> getSurvivors() const; // utiliser vector au debut ensuite a cause d'erreur remplacer par Npc*, mais npc n'Est pas bon donc remplacer par vector
 
-    void addSurvivor(Npc* npc); // correctif final : doit pas renvoyer de liste, ajoute seulement un élément, donc enlever vector<Npc*>
+    void addSurvivor(Npc* npc); // correctif final : doit pas renvoyer de liste, ajoute seulement un Ã©lÃ©ment, donc enlever vector<Npc*>
 
     std::string toString() const;
 

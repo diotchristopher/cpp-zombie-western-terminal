@@ -76,8 +76,8 @@ Mission* QuestSystem::autoTriggerMission(Location* location) {
 		return nullptr;
 	}
 
-	if (location->getLocationType() == LocationType::CEMETERY) {
-		Mission* cemetery = new MissionCemetery(player, location, "Mission de cimetière"); // ajout en trop MissionType::CEMETERY, difficile a trouver
+	if (location->getLocationType() == LocationType::CEMETERY && location->getInvasionLevel() != InvasionLevel::SAFE) { // ajoute de InvasionLevel::SAFE pour pas lancer la mission dans ce cas
+		Mission* cemetery = new MissionCemetery(player, location, "Mission de cimetiÃ¨re"); // ajout en trop MissionType::CEMETERY, difficile a trouver
 		cemetery->start();
 		activeMissions.push_back(cemetery);
 		return cemetery;
@@ -86,7 +86,7 @@ Mission* QuestSystem::autoTriggerMission(Location* location) {
 
 	if (location->getLocationType() == LocationType::TOWN && 
 		(location->getInvasionLevel() == InvasionLevel::INFESTED || location->getInvasionLevel() == InvasionLevel::THREATENED)) {
-		Mission* defense = new MissionDefense(this->player, location, "Mission de défense"); // ajout en trop MissionType::DEFENSE, difficile a trouver
+		Mission* defense = new MissionDefense(this->player, location, "Mission de dÃ©fense"); // ajout en trop MissionType::DEFENSE, difficile a trouver
 		defense->start();
 		activeMissions.push_back(defense);
 		return defense;
@@ -99,7 +99,7 @@ void QuestSystem::startMission(Mission* mission) {
 	if (!mission) return; // oublie
 	if (!mission->getIsActive() && !mission->getIsCompleted()) {
 		mission->start();
-		cout << "Mission démarrée : " << mission->getTitle() << endl;
+		cout << "Mission dÃ©marrÃ©e : " << mission->getTitle() << endl;
 		activeMissions.push_back(mission); // 
 	}
 }

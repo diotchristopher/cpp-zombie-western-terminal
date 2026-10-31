@@ -49,7 +49,7 @@ public:
 
     static Map loadDefaultMap();
 
-    // Méthodes utilitaires
+    // MÃ©thodes utilitaires
     const Location* findLocationByName(const std::string& name) const;  // nullptr si absent
     std::vector<const Location*> getLocationByTerritorry(Territory territory) const;
 

@@ -25,6 +25,7 @@ bool Player::isPlayerControlled() const { return true; }
 
 void Player::heal(int amount) { // oublie de Player:: et oublie de amount
 	takeDamage(-amount);
+	if (health > 100) { health = 100; } // ajoute limite a 100, la vie du joueur
 }
 
 void Player::useStamina() {
@@ -41,7 +42,7 @@ void Player::useDeadEyes() {
 
 void Player::rechargeDeadEye(int amount) {
 	deadEyes += amount;
-	if (amount > 100) {
+	if (deadEyes > 100) { // erreur amount au lieu de deadEyes
 		deadEyes = 100;
 	}
 }

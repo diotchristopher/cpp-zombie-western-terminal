@@ -5,6 +5,7 @@
 // cpp
 #include <iostream>
 #include <algorithm> // oublie pour remove
+#include <limits> // oublie pour numeric_limits
 
 using namespace std;
 
@@ -15,7 +16,7 @@ void CombatSystem::StartCombat(vector<IFighter*>& teamA, std::vector<IFighter*>&
 
     while (!teamA.empty() && !teamB.empty()) { // Hesitation
         int zombieAttacks = 0;
-        const int MAX_ZOMBIE_ATTACKS = 3;
+        const int MAX_ZOMBIE_ATTACKS = 1; // change de 3 a 1, pour augementer le taux de survie
         for (auto* enemy : teamB) { // const &auto au lieu de + renommer fighter en enemy
             if (!enemy->isAlive()) { continue; }
             
@@ -25,7 +26,7 @@ void CombatSystem::StartCombat(vector<IFighter*>& teamA, std::vector<IFighter*>&
             
             if (!teamA.front()->isAlive()) {
                 if (teamA.front()->isPlayerControlled()) {
-                    cout << "Vous etes mort !" << endl;
+                    cout << "Vous êtes mort !" << endl;
                     return;
                 }
                 else {
@@ -45,14 +46,20 @@ void CombatSystem::StartCombat(vector<IFighter*>& teamA, std::vector<IFighter*>&
             IFighter* target = nullptr; // mauvaise orthographe traget
             
             if (ally->isPlayerControlled()) { // remplacmenet teamA.front(), teste que le premier
-                cout << "Choisir un enemi a combattre." << endl;
+                cout << "\n" << ally->getName() << " a " << ally->getHealth() << " points de santé" << endl;
+                cout << "Choisir un ennemi à combattre :" << endl;
                 
                 for (size_t i = 0; i < teamB.size(); i++) { // oublie de size_t, ajout de int pour rien
-                    cout << " (" << i << ") " << teamB[i]->getName() << " avec " << teamB[i]->getHealth() << " points de santé !" << endl;
+                    cout << " [" << i << "] " << teamB[i]->getName() << " avec " << teamB[i]->getHealth() << " points de santé !" << endl;
                 }
+                cout << "> ";
 
                 int choice = -1; // oublie de = 0 et remplacement de 0 par -1 pour pas mettre valeur existante par default
-                cin >> choice;
+                if (!(cin >> choice)) { // oublie, sans tous ca creer un bug
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    choice = -1;
+                }
 
                 if (choice >= 0 && choice < (int)teamB.size()) { // oublie de (int) parce que teamB retourne size_t et erreur <= au lieu de <
                     target = teamB[choice]; // mauvaise orthographe traget
@@ -81,7 +88,8 @@ void CombatSystem::StartCombat(vector<IFighter*>& teamA, std::vector<IFighter*>&
                 ally->performAttack(target);
             }
 
-            ally->performAttack(target); // mauvaise orthographe traget
+            // suppr doublon
+            // ally->performAttack(target); // mauvaise orthographe traget
             
             if (!target->isAlive()) { // erreur ajoute de !teamB.front()->isAlive()
                 cout << target->getName() << " est mort !" << endl;

@@ -24,8 +24,8 @@ Game::Game(const std::string& playerName)
 
     questSystem = new QuestSystem(&player);
 
-    cout << "Bienvenue dans Zombie Western " << player.getName() << "!\n";
-    srand(static_cast<unsigned>(time(nullptr))); // Pour les zombies aléatoires et tous ce qui est aléatoire
+    cout << "Bienvenue dans Zombie Western " << player.getName() << " !\n";
+    srand(static_cast<unsigned>(time(nullptr))); // Pour les zombies alÃ©atoires et tous ce qui est alÃ©atoire
 }
 
 Game::~Game() {
@@ -35,35 +35,38 @@ Game::~Game() {
 void Game::run() { // oublie Game::
     // srand deplacer dans le constructeur, pas besoin ici
     cout << endl;
-    cout << "Tu te trouve actuellement à : " << currentLocation->getName() << endl;
+    cout << "Tu te trouves actuellement Ã  : " << currentLocation->getName() << endl;
 
     displayMenu();
     while (isRunning) { // remplce true 
-
+        cout << endl;
         cout << "Choix : ";
-        int choice;
-        cin >> choice;
+        int choice = 0;
+        if (!(cin >> choice)) { // ajoute de test pour pas bug quand lettres au lieu de nombres
+            if (cin.eof()) break;
+            cin.clear();
+        }
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // recup sur projet de magasin
-
+        cout << endl;
         switch (choice) {
         case 1: handleExplorer(); break;
         case 2: handleResearch(); break;
         case 3: handleMission(); break;
         case 4: isRunning = false; break;
         default:
-            cout << "Unknown choice.\n";
+            cout << "Choix inconnu.\n"; // Unknown choice.
         }
 	}
 
-    questSystem->updateMissions();
+    // questSystem->updateMissions(); // remove this
 }
 
 void Game::displayMenu() {
     cout << "\n-- Menu principal --\n";
     cout << "1. Explorer\n";
     cout << "2. Fouiller la zone\n";
-    cout << "3. Quêtes\n";
+    cout << "3. QuÃªtes\n";
     cout << "4. Quitter\n";
 }
 
@@ -73,16 +76,18 @@ void Game::handleExplorer() {
     for (size_t i = 0; i < locs.size(); i++) {
         cout << i << ") " << locs[i].toString() << "\n";
     }
-    cout << "Choisir index de destination (-1 annuler) : ";
+    cout << endl;
+    cout << "Choisir une destination (-1 annuler) : ";
     int idx;
     if (!(cin >> idx)) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Entrée invalide.\n";
+        cout << "EntrÃ©e invalide.\n";
         return;
     }
+    cout << endl;
     if (idx < 0) {
-        cout << "Exploration annulée.\n";
+        cout << "Exploration annulÃ©e.\n";
         return;
     }
     Location* dest = worldMap.getLocationAt(static_cast<size_t>(idx)); // oublie de static_cast<size_t>
@@ -90,29 +95,47 @@ void Game::handleExplorer() {
         cout << "Index hors plage.\n";
         return;
     }
-    moveToLocation(&player, dest);
+    if (dest == currentLocation) {
+        cout << "Tu es dÃ©jÃ  Ã  " << dest->getName() << ".\n";
+        return;
+    }
 
-    questSystem->tryGenerateMission(dest);
+    bool eventHappened = moveToLocation(&player, dest); // remplace moveToLocation(&player, dest);
+
+    // questSystem->tryGenerateMission(dest); // suppr parce que double appel
+    
+    if (!isRunning) return; // ajoute bloque mission si mort
+
+    Mission* rescue = questSystem->tryGenerateMission(dest);
+    if (rescue) {
+        questSystem->startMission(rescue);
+        runMission(rescue);
+    }
+    else if (!eventHappened) {
+        cout << "Rien Ã  voir ici.\n";
+    }
 }
 
 void Game::handleResearch() {
-    cout << "Tu fouille la zone...\n";
+    cout << "Tu fouilles la zone...\n";
     lootSystem.HandleLoot(player);
 }
 
 void Game::handleMission() { 
     cout << "Missions / Sauvetage :\n";
     if (questSystem == nullptr) {
-        cout << "Système de quêtes non initialisé (prototype).\n";
+        cout << "SystÃ¨me de quÃªtes non initialisÃ© (prototype).\n";
         return;
     }
 }
 
-void Game::moveToLocation(Player* player, Location* location) { // ajout de Player* player, 
-    if (!location) {
+bool Game::moveToLocation(Player* player, Location* location) { // ajout de Player* player, // autre maj, remplace void par bool
+    if (!player || !location) {  // erreur ajoute !player || dans update
         cout << "Destination invalide.\n";
-        return;
+        return false;
     }
+
+    bool eventHappened = false;
 
     cout << "Vous partez de " << (currentLocation ? currentLocation->getName() : "nulle part") << " vers " << location->getName() << "...\n";
 
@@ -123,7 +146,7 @@ void Game::moveToLocation(Player* player, Location* location) { // ajout de Play
     // ajout de l'equipe A dans IFighter : Joueur
     vector<IFighter*> teamA;
 
-    if (player && player->getHealth() > 0) {
+    if (player->getHealth() > 0) { // suppr player && apres ajoute !player || dans moveToLocation
         teamA.push_back(player);
     }
 
@@ -158,6 +181,7 @@ void Game::moveToLocation(Player* player, Location* location) { // ajout de Play
     }
 
     if (!teamA.empty() && !teamB.empty()) {
+        eventHappened = true;
         CombatSystem combat;
         combat.StartCombat(teamA, teamB);
 
@@ -167,10 +191,34 @@ void Game::moveToLocation(Player* player, Location* location) { // ajout de Play
     if (player->getHealth() <= 0) {
         cout << "Le joueur est mort. Fin du jeu.\n";
         isRunning = false;
-        return;
+        return true;
     }
 
-    cout << "Vous arrivez à " << currentLocation->getName() << ".\n";
+    cout << "Vous arrivez Ã  " << currentLocation->getName() << ".\n";
 
-    questSystem->autoTriggerMission(currentLocation);
+    if (location->getIsSafeZone()) { // ajoute strat de survie
+        eventHappened = true;
+        player->heal(100);
+        cout << "SantÃ© du joueur rÃ©gÃ©nÃ©rÃ©e : " << player->getHealth() << " points.\n";
+    }
+
+    // questSystem->autoTriggerMission(currentLocation); remplacer par runMission(...)
+    Mission* mission = questSystem->autoTriggerMission(currentLocation);
+    if (mission) {
+        eventHappened = true;
+        runMission(mission);
+    }
+
+    return eventHappened;
+}
+
+void Game::runMission(Mission* mission) { // ajout pour resoudre un probleme de maj
+    while (mission && mission->getIsActive() && !mission->getIsCompleted() && player.getHealth() > 0) {
+        mission->update();
+    }
+
+    if (player.getHealth() <= 0) {
+        cout << "Le joueur est mort. Fin du jeu.\n";
+        isRunning = false;
+    }
 }

@@ -10,7 +10,8 @@ using namespace std;
 
 
 ZoneSystem::ZoneSystem(Map* map) : worldMap(map) {
-    srand((unsigned)time(nullptr)); // oublie
+    // remove this plus besoin
+    // srand((unsigned)time(nullptr)); // oublie
 }
 
 void ZoneSystem::setMap(Map* map) { worldMap = map; }
@@ -99,7 +100,7 @@ vector<NpcZombie*> ZoneSystem::spawnNpcZombies(const Location& location) {
             role = Role::PROSTITUTE;
             type = ZombieType::SPITTER;
         } else { // 10%
-            name = "Un zombie brutale";
+            name = "Un zombie brutal";
             health = 40;
             speed = 1;
             gender = true;

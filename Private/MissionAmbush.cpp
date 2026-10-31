@@ -66,7 +66,7 @@ void MissionAmbush::update() {
     // maj quand joueur mort
     if (teamA.empty())
     {
-        cout << "Tu es mort. Repousse des Zombie échouée.\n";
+        cout << "Tu es mort. Repousse des Zombie Ã©chouÃ©e.\n";
         isActive = false;
         isCompleted = true;
         hasSurvived = false;
@@ -153,7 +153,7 @@ void MissionAmbush::spawnNpcZombies() {
             type = ZombieType::SPITTER;
         }
         else { // 10%
-            name = "Un zombie brutale";
+            name = "Un zombie brutal";
             health = 40;
             speed = 1;
             gender = true;
@@ -253,7 +253,7 @@ void MissionAmbush::spawnAnimalZombies() {
                     AnimalName::HORSE, true, Type::STANDARD, Rarety::UNCOMMON));
             }
         }
-        else if (roll < 75) { // 25% vaches (2-4, passives sauf si attaquées)
+        else if (roll < 75) { // 25% vaches (2-4, passives sauf si attaquÃ©es)
             totalAnimals = rand() % 4 + 1;
             for (int i = 0; i < totalAnimals; i++) {
                 localAnimalZombies.push_back(new AnimalsZombie(
@@ -261,7 +261,7 @@ void MissionAmbush::spawnAnimalZombies() {
                     AnimalName::COW, false, Type::STANDARD, Rarety::COMMON));
             }
         }
-        else { // 25% cochons (2-3, passifs sauf si attaqués)
+        else { // 25% cochons (2-3, passifs sauf si attaquÃ©s)
             totalAnimals = rand() % 3 + 1;
             for (int i = 0; i < totalAnimals; i++) {
                 localAnimalZombies.push_back(new AnimalsZombie(

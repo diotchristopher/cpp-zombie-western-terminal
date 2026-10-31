@@ -35,7 +35,8 @@ void LootSystem::HandleLoot(Player& player) {
 }
 
 vector<LootItem> LootSystem::GenerateLoot() {
-    srand(static_cast<unsigned int>(time(0))); // ajoute de static_cast<unsigned int> en bonne pratique
+    // suppr plus besoin
+    // srand(static_cast<unsigned int>(time(0))); // ajoute de static_cast<unsigned int> en bonne pratique
     vector<LootItem> loot;
 
     int randomNumber = rand() % 100;

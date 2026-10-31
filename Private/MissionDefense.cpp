@@ -33,19 +33,19 @@ void MissionDefense::start() {
     }
 
     cout << ">> [" << getTitle() << "] " << getTargetLocation()->getName()
-        << " est attaquÈe par des hordes de zombies !" << endl;
+        << " est attaqu√©e par des hordes de zombies !" << endl;
     cout << "Objectif : Tenir " << totalWaves << " vagues !" << endl;
 }
 
 void MissionDefense::update() {
-    if (!isActive || isCompleted) {
+    if (!isActive || isCompleted || !player) { // erreur ajoute de || !player
         return;
     }
 
     // ajout de l'equipe A dans IFighter : Joueur et Allie
     vector<IFighter*> teamA;
 
-    if (player && player->getHealth() > 0) {
+    if (player->getHealth() > 0) { // suppr player && apres ajoute || !player dans update
         teamA.push_back(player);
     }
 
@@ -67,18 +67,20 @@ void MissionDefense::update() {
     // maj quand survivant et joueur mort
     if (teamA.empty())
     {
-        cout << "Tous les survivants ont ÈtÈ tuÈs. la ville est tomber.\n";
-        cout << "[Nom de la ville] has been lost" << endl;
+        cout << "Tous les survivants ont √©t√© tu√©s. La ville est tomb√©e.\n"; 
+        cout << getTargetLocation()->getName() << " est perdue" << endl; // ajoute de getTargetLocation()->getName() a la place de [Nom de la ville] et remplacer has been lost
         isActive = false;
         isCompleted = true;
         isDefenseSuccess = false;
         return;
     }
 
-    // maj quand tous les zombiÈs sont morts vague suivante, quand tous les vague termine reussie
+    // maj quand tous les zombi√©s sont morts vague suivante, quand tous les vague termine reussie
     if (teamB.empty()) {
         if (currentWave < totalWaves) {
             currentWave++;
+            player->heal(20); // ajout = augemente le taux de survie
+            cout << "+20 points de sant√©" << endl;
             spawnZombiesPerWave(currentWave);
         }
     }
@@ -100,18 +102,20 @@ void MissionDefense::update() {
         if (getTargetLocation()) {
             getTargetLocation()->setInvasionLevel(InvasionLevel::SAFE);
         }
-        cout << ">> Victoire ! La defense de " << getTargetLocation()->getName() << " a reussi !" << endl;
+        cout << ">> Victoire ! La d√©fense de " << getTargetLocation()->getName() << " a r√©ussi !" << endl;
+
+        giveReward(*player); // ajouter pour donner recompence
     }
 }
 
 bool MissionDefense::checkCompletion() { // double checkCompletion()
-    return currentWave == totalWaves;
+    return currentWave == totalWaves && localZombies.empty() && player->getHealth() > 0;
 }
 
 void MissionDefense::giveReward(Player& player) {
     player.addAmmo(6);
     player.addReputation(100);
-    cout << "Tu as gagnÈ " << player.getAmmo() << " munitions pour ton revolver" << endl;
+    cout << "Tu as gagn√© 6 munitions pour ton revolver" << endl; // suppr " << player.getAmmo() << " afficher le total au lieu du nombre
     cout << "+ Gain d'Honneur" << endl;
 }
 
@@ -188,7 +192,7 @@ void MissionDefense::spawnZombiesPerWave(int currentWave) {
             type = ZombieType::SPITTER;
         }
         else { // 10%
-            name = "Un zombie brutale";
+            name = "Un zombie brutal";
             health = 40;
             speed = 1;
             gender = true;

@@ -38,7 +38,8 @@ private:
     void handleExplorer();
     void handleResearch();
     void handleMission();
-    void moveToLocation(Player* player, Location* location); // ajout de Player* player, 
+    bool moveToLocation(Player* player, Location* location); // ajout de Player* player, 
+    void runMission(Mission* mission);
 
 public:
     //======================================================================================

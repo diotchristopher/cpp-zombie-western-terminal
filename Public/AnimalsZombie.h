@@ -7,7 +7,7 @@
 #include <string>
 
 enum class AnimalName {
-    WOLF, PUMA, BEAR,      // forêt / montagne
+    WOLF, PUMA, BEAR,      // forÃªt / montagne
     DEER, VULTURE,         // plaines
     DOG, HORSE, COW, PIG   // ferme
 };

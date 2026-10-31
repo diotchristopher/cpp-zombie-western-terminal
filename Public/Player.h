@@ -14,8 +14,8 @@ private:
     int stamina;
     int deadEyes;
     int ammo;
-    int money;
-    int reputation;
+    int money = 0;
+    int reputation = 0;
 
 public:
     //======================================================================================

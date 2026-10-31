@@ -19,21 +19,21 @@ const vector<Location>& Map::getLocations() const { return locations; }
 string Map::getWeatherDescription(WeatherCondition weather) {
     switch (weather) {
     case WeatherCondition::CLEAR:
-        return "Le temps est clair et calme. Ça n'arrive pas souvent.";
+        return "Le temps est clair et calme. Ã‡a n'arrive pas souvent.";
     case WeatherCondition::FOGGY:
-        return "Un épais brouillard empêche de voir à plus de dix mètres. Un zombie peut venir de n'importe où.";
+        return "Un Ã©pais brouillard empÃªche de voir Ã  plus de dix mÃ¨tres. Un zombie peut venir de n'importe oÃ¹.";
     case WeatherCondition::NIGHT_FOG:
-        return "La nuit est tombée avec un épais brouillard.";
+        return "La nuit est tombÃ©e avec un Ã©pais brouillard.";
     case WeatherCondition::RAINY:
         return "La pluie tombe tellement fort. On entend les pas des zombies arriver sur l'eau.";
     case WeatherCondition::STORMY:
         return "Un orage violent fait rage. Les eleclaires illumine les silouhette";
     case WeatherCondition::WINDY:
-        return "Le vent souffle à travers les arbres. On apercoit quelque chose bouger dans l'ombre.";
+        return "Le vent souffle Ã  travers les arbres. On apercoit quelque chose bouger dans l'ombre.";
     case WeatherCondition::SNOWY:
         return "LA neige tombe, mais le froid n'empeche pas les mort vivant d'attaquer";
     default:
-        return "Conditions météorologiques inconnues.";
+        return "Conditions mÃ©tÃ©orologiques inconnues.";
     }
 } // correctif finale : oublie de }
 
@@ -43,7 +43,7 @@ Map Map::loadDefaultMap() {
     // GREAT PLAINS
     locations.emplace_back("William's Hope", LocationType::FARM, 5, InvasionLevel::SAFE, Territory::GREAT_PLAINS, true);
     locations.emplace_back("Sweetwater", LocationType::TOWN, 15, InvasionLevel::INFESTED, Territory::GREAT_PLAINS, false);
-    locations.emplace_back("Sweetwater Cimetery", LocationType::CEMETERY, 15, InvasionLevel::INFESTED, Territory::GREAT_PLAINS, false);
+    locations.emplace_back("Sweetwater Cemetery", LocationType::CEMETERY, 15, InvasionLevel::INFESTED, Territory::GREAT_PLAINS, false);
     locations.emplace_back("Fletcher's Ranch", LocationType::FARM, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
     locations.emplace_back("Great Flats", LocationType::PLAINS, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);
     locations.emplace_back("Great Flats Road", LocationType::ROAD, 10, InvasionLevel::THREATENED, Territory::GREAT_PLAINS, false);

@@ -23,7 +23,7 @@ bool MissionRescue::getIsRescued() const { return isRescued;}
 void MissionRescue::start() {
     isActive = true;
 
-    const int survivorsPlanned = rand() % 4;
+    const int survivorsPlanned = 1 + rand() % 3; // remplace 4 par 3, pour eviter 0
     // 60% pour une mission de sauvetage classique (plusieurs survivants, vagues de zombies).
     // 30 % pour une embuscade de bandits(un survivant, pas de zombies).
     // 10 % pour un sauvetage simple(un survivant, une vague de zombies).
@@ -36,8 +36,8 @@ void MissionRescue::start() {
         spawnSoloSurvivor();
         spawnZombiesPerWave(currentWave);
 
-        cout << "Un bruit de cri a l'aide. Un survivants est attaquer." << endl;
-        cout << "Objectif : Prot�gez le survivant !" << endl;
+        cout << "Un bruit de cri à l'aide. Un survivant est attaqué." << endl;
+        cout << "Objectif : Protégez le survivant !" << endl;
     }
     else {
         const int hostile = rand() % 100;
@@ -48,10 +48,10 @@ void MissionRescue::start() {
             zombiesPerWave = 0;
 
             spawnCampSurvivors(survivorsPlanned);
-            int number = rand() % 4;
+            int number = 1 + rand() % 3; // remplace 4 par 3, pour eviter 0 et ajoute de 1 +
             spawnHostileBandits(number);
 
-            cout << "Un bruit de cri a l'aide. Un survivants est attaquer." << endl;
+            cout << "Un bruit de cri à l'aide. Un survivant est attaqué." << endl;
         } else {
             missionScenario = MissionRescueScenario::CAMP;
             waveCount = 2;
@@ -60,22 +60,22 @@ void MissionRescue::start() {
             spawnCampSurvivors(survivorsPlanned);
             spawnZombiesPerWave(currentWave);
 
-            cout << "Un bruit de cri a l'aide. " << survivorsPlanned << " survivants sont attaquer." << endl;
-            cout << "Objectif : Prot�gez les survivants !" << endl;
+            cout << "Un bruit de cri à l'aide. " << survivorsPlanned << " survivants sont attaqués." << endl;
+            cout << "Objectif : Protégez les survivants !" << endl;
         }
     }
     // enlever ajout de survivant ici, creer des fonctions et permettre le choix ici
 }
 
 void MissionRescue::update() {
-    if (!isActive || isCompleted) {
+    if (!isActive || isCompleted || !player) { // erreur ajoute de || !player
         return;
     }
 
     // ajout de l'equipe A dans IFighter : Joueur et Allie
     vector<IFighter*> teamA;
 
-    if (player && player->getHealth() > 0) {
+    if (player->getHealth() > 0) {  // suppr player && apres ajoute || !player dans update
         teamA.push_back(player);
     }
 
@@ -105,7 +105,7 @@ void MissionRescue::update() {
     // maj quand survivant mort
     if (teamA.empty()) // remplace localSurvivors.empty()
     {
-        cout << "Les survivants sont morts. Mission �chou�e.\n";
+        cout << "Les survivants sont morts. Mission échouée.\n";
         isActive = false;
         isCompleted = true;
         isRescued = false;
@@ -116,6 +116,8 @@ void MissionRescue::update() {
     if (teamB.empty()) { // remplace localZombies.empty()
         if (currentWave < waveCount) {
             currentWave++;
+            player->heal(20); // ajout = augemente le taux de survie
+            cout << "+20 points de santé" << endl;
             spawnZombiesPerWave(currentWave);
         }
     }
@@ -131,7 +133,8 @@ void MissionRescue::update() {
 
 
     if (checkCompletion()) {
-        cout << "Les survivants ont �t� sauv�s." << endl;
+        cout << "Les survivants ont été sauvés." << endl;
+        giveReward(*player); // ajouter pour donner recompence
         isCompleted = true;
         isActive = false;
         isRescued = true;
@@ -139,17 +142,17 @@ void MissionRescue::update() {
 }
 
 bool MissionRescue::checkCompletion() {
-    return currentWave == waveCount; // remplace waveRemaining
+    return currentWave == waveCount && localZombies.empty() && localBandits.empty() && player->getHealth() > 0; // remplace waveRemaining et ajoute d'autres conditions pour ressoudre bug.
 }
 
 void MissionRescue::giveReward(Player& player) {
     int ammoNumber = rand() % 6;
     player.addAmmo(ammoNumber);
-    cout << "+" << player.getAmmo() << " Munitions de revolvers" << endl;
+    cout << "+" << ammoNumber << " munitions de revolver" << endl; // suppr " << player.getAmmo() << " afficher le total au lieu du nombre
     int moneyNumber = rand() % 15 + 5;
     if (rand() % 100 < 50) {
         player.addMoney(moneyNumber);
-        cout << "+$" << player.getMoney() << endl;
+        cout << "+$" << moneyNumber << endl; // remplacer player.getMoney() par moneyNumber
     }
     player.addReputation(50);
     cout << "+ Gain d'Honneur" << endl;
@@ -250,7 +253,7 @@ void MissionRescue::spawnZombiesPerWave(int currentWave) {
             type = ZombieType::SPITTER;
         }
         else { // 10%
-            name = "Un zombie brutale";
+            name = "Un zombie brutal";
             health = 40;
             speed = 1;
             gender = true;
@@ -322,7 +325,7 @@ void MissionRescue::spawnZombies() {
             type = ZombieType::SPITTER;
         }
         else { // 10%
-            name = "Un zombie brutale";
+            name = "Un zombie brutal";
             health = 40;
             speed = 1;
             gender = true;

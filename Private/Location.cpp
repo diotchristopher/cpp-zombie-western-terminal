@@ -43,6 +43,9 @@ string Location::toString() const {
     case LocationType::ROAD: ss << "Road"; break;
     case LocationType::FARM: ss << "Farm"; break;
     case LocationType::FOREST: ss << "Forest"; break;
+    case LocationType::CEMETERY: ss << "Cemetery"; break; // oublie d'ajouter
+    case LocationType::PLAINS: ss << "Plains"; break; // oublie d'ajouter
+    case LocationType::CAMP: ss << "Camp"; break; // oublie d'ajouter
     }
     // ss << ") - Survivors: " << survivors;
     ss << " - Invasion: ";
